@@ -1,0 +1,20 @@
+<div x-data="smsCounter()">
+  <div class="field">
+    <label>SMS tekst</label>
+    <textarea rows="6" x-model="text" placeholder="Skriv din SMS her..."></textarea>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+    <div>
+      Antal tegn: <span x-text="charCount"></span><br>
+      Antal SMS'er: <span x-text="smsCount"></span>
+    </div>
+    <div x-show="charCount>160" style="color:#f44336;font-weight:bold;">
+      ⚠ SMS vil blive delt i <span x-text="smsCount"></span> dele
+    </div>
+  </div>
+
+  <div style="height:10px;background:#eee;border-radius:6px;overflow:hidden;margin-top:8px;">
+    <div :style="{width:(charCount>160?100:(charCount/160*100))+'%',background:charCount<100?'#4caf50':charCount<140?'#ffeb3b':charCount<160?'#ff9800':'#f44336',height:'100%',transition:'width .2s linear, background .3s ease'}"></div>
+  </div>
+</div>
