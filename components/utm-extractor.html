@@ -1,0 +1,24 @@
+<div x-data="utmExtractor()">
+  <div class="field">
+    <label>Indsæt URL</label>
+    <input type="url" x-model="inputUrl" placeholder="https://...">
+  </div>
+
+  <button class="generate" @click="extractUTM()">Hent UTM</button>
+
+  <table x-show="utmParams.length">
+    <thead>
+      <tr><th>Param</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+      <template x-for="(p,i) in utmParams" :key="i">
+        <tr>
+          <td x-text="p.key"></td>
+          <td x-text="p.value"></td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+
+  <div class="notifikation" :class="{show: showNotification}" x-text="notificationMessage"></div>
+</div>
