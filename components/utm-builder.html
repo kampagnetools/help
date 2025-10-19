@@ -1,0 +1,50 @@
+<div x-data="utmBuilder()">
+  <div class="field"><label>Basis-URL</label><input type="url" x-model="baseUrl" placeholder="https://www.msf.dk/stoet/gaza"></div>
+  <div class="field"><label>Kanal</label><select x-model="channel" @change="channelChanged()"><option value="">Vælg kanal</option><template x-for="c in ['email','sms','meta','facebook','instagram','google_ads','ms_ads']" :key="c"><option :value="c" x-text="c"></option></template></select></div>
+
+  <!-- Kampagne controls -->
+  <div class="field"><label>Kampagnetype</label>
+    <select x-model="campaignType" @change="updateCampaignCode()"><option value="" disabled selected>Vælg kampagnetype</option><option value="feltpartner_nyhedsbrev">Feltpartner nyhedsbrev</option><option value="oneoff_nyhedsbrev">One-off nyhedsbrev</option></select>
+  </div>
+
+  <div class="field"><label>Øremærket</label>
+    <div class="segmented-control">
+      <button :class="{ 'active': earmarkType==='yes' }" @click="earmarkType='yes'">Ja</button>
+      <button :class="{ 'active': earmarkType==='no' }" @click="earmarkType='no'">Nej</button>
+    </div>
+  </div>
+
+  <div class="field"><label>Kampagnekode</label><input type="text" x-model="campaign" :disabled="earmarkType!=='yes'" :class="{'disabled':earmarkType!=='yes'}" placeholder="f.eks. 3799"></div>
+
+  <details>
+    <summary>Tilføj UTM / Indhold / Anker / Versioner</summary>
+    <div class="field"><label>Indhold (utm_content)</label><input type="text" x-model="content" placeholder="bannerA, heroCTA"></div>
+    <div class="field"><label>UTM Campaign (overskriv)</label><input type="text" x-model="utmCampaign"></div>
+    <div class="field"><label>Anker</label><select x-model="anchor"><option value="">Intet</option><option value="video">Video</option><option value="topbanner">Topbanner</option><option value="footer">Footer</option><option value="gvform">Gravity form</option></select></div>
+    <div class="field"><label>Flere versioner?</label><select x-model="versionCount"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+  </details>
+
+  <button class="generate" @click="generateLinks()">Generér links</button>
+
+  <template x-for="(l,i) in links" :key="i"><div class="codebox" @click="copy(l.url)" x-text="l.url"></div></template>
+  <div x-show="links.length>1" style="margin-top:10px;"><button class="secondary" @click="copyAll()">Kopier alle links</button></div>
+
+  <table x-show="links.length">
+    <thead><tr><th>utm_source</th><th>utm_medium</th><th>utm_campaign</th><th x-show="links[0].utm_content">utm_content</th><th x-show="links[0].anchor">Anker</th><th>Status</th><th>Handlinger</th></tr></thead>
+    <tbody>
+      <template x-for="(l,i) in links" :key="i">
+        <tr class="link-row">
+          <td x-text="l.utm_source"></td>
+          <td x-text="l.utm_medium"></td>
+          <td x-text="l.utm_campaign"></td>
+          <td x-show="l.utm_content" x-text="l.utm_content"></td>
+          <td x-show="l.anchor" x-text="l.anchor"></td>
+          <td :class="l.statusClass" x-text="l.statusText"></td>
+          <td><div class="link-buttons"><button class="secondary" @click="open(l.url)">Åbn</button></div></td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+
+  <div class="notifikation" :class="{show: showNotification}" x-text="notificationMessage"></div>
+</div>
