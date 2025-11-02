@@ -1,13 +1,71 @@
-<script>
+<script type="text/javascript">
 (function () {
   try {
-    if (sessionStorage.getItem('formSubmitFlag') === 'true') return;
-    sessionStorage.setItem('formSubmitFlag', 'true');
-  } catch (e) {
-    if (window.formSubmitFlag) return;
-    window.formSubmitFlag = true;
-  }
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: 'form_submit_once' });
+    var dl = window.dataLayer = window.dataLayer || [];
+
+    function fireOnce(formId) {
+      var key = 'gf_submitted_' + (formId || 'unknown');
+      if (sessionStorage.getItem(key) === 'done') return;
+      sessionStorage.setItem(key, 'done');
+      dl.push({ event: 'form_submit_once', form_id: String(formId || '') });
+    }
+
+    // --- A) AJAX ---
+    if (window.jQuery && window.jQuery(document).on) {
+      window.jQuery(document).on('gform_confirmation_loaded', function (e, formId) {
+        fireOnce(formId);
+      });
+    }
+    document.addEventListener('gform_confirmation_loaded', function (e) {
+      var formId = (e && e.detail && e.detail.formId) || '';
+      fireOnce(formId);
+    }, true);
+
+    // --- B) Non-AJAX ---
+    document.addEventListener('click', function (ev) {
+      var t = ev.target || {};
+      var id = t.id || '';
+      var m = id.match(/^gform_submit_button_(\d+)$/);
+      if (m) {
+        sessionStorage.setItem('gf_pending_' + m[1], '1');
+      }
+    }, true);
+
+    function isConfirmationDomPresent() {
+      var nodes = document.querySelectorAll(
+        '[id^="gform_confirmation_wrapper_"], [id^="gform_confirmation_message_"], .gform_confirmation_message'
+      );
+      return nodes && nodes.length > 0;
+    }
+
+    function hasValidationErrors(formId) {
+      var err = document.querySelector('.gform_validation_errors, .validation_error');
+      return !!err;
+    }
+
+    function checkNonAjaxConfirmation() {
+      if (!isConfirmationDomPresent()) return;
+      var wrap = document.querySelector('[id^="gform_confirmation_wrapper_"]');
+      var formId = '';
+      if (wrap && wrap.id) {
+        var m = wrap.id.match(/(\d+)$/);
+        formId = m ? m[1] : '';
+      }
+      if (formId && sessionStorage.getItem('gf_pending_' + formId) === '1') {
+        if (!hasValidationErrors(formId)) {
+          sessionStorage.removeItem('gf_pending_' + formId);
+          fireOnce(formId);
+        }
+      } else if (!formId) {
+        fireOnce('');
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkNonAjaxConfirmation);
+    } else {
+      checkNonAjaxConfirmation();
+    }
+  } catch (e) { /* no-op */ }
 })();
 </script>
