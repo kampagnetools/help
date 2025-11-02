@@ -1,13 +1,13 @@
 <script>
 (function () {
   try {
-    if (sessionStorage.getItem('formStartFlag') === 'true') return;
-    sessionStorage.setItem('formStartFlag', 'true');
+    if (sessionStorage.getItem('formSubmitFlag') === 'true') return;
+    sessionStorage.setItem('formSubmitFlag', 'true');
   } catch (e) {
-    if (window.formStartFlag) return;
-    window.formStartFlag = true;
+    if (window.formSubmitFlag) return;
+    window.formSubmitFlag = true;
   }
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ event: 'form_start_once' });
+  window.dataLayer.push({ event: 'form_submit_once' });
 })();
 </script>
