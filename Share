@@ -3,25 +3,26 @@
   try {
     var dl = window.dataLayer = window.dataLayer || [];
 
-    function fireOnce(formId) {
+    var fireOnce = function (formId) {
       var key = 'gf_submitted_' + (formId || 'unknown');
       if (sessionStorage.getItem(key) === 'done') return;
       sessionStorage.setItem(key, 'done');
       dl.push({ event: 'form_submit_once', form_id: String(formId || '') });
-    }
+    };
 
-    // --- A) AJAX ---
+    // --- A) AJAX: affyr når bekræftelsen er vist ---
     if (window.jQuery && window.jQuery(document).on) {
       window.jQuery(document).on('gform_confirmation_loaded', function (e, formId) {
         fireOnce(formId);
       });
     }
     document.addEventListener('gform_confirmation_loaded', function (e) {
-      var formId = (e && e.detail && e.detail.formId) || '';
+      var formId = '';
+      if (e && e.detail && e.detail.formId) formId = e.detail.formId;
       fireOnce(formId);
     }, true);
 
-    // --- B) Non-AJAX ---
+    // --- B) Non-AJAX: markér pending ved klik på submit-knap ---
     document.addEventListener('click', function (ev) {
       var t = ev.target || {};
       var id = t.id || '';
@@ -31,25 +32,25 @@
       }
     }, true);
 
-    function isConfirmationDomPresent() {
+    var isConfirmationDomPresent = function () {
       var nodes = document.querySelectorAll(
         '[id^="gform_confirmation_wrapper_"], [id^="gform_confirmation_message_"], .gform_confirmation_message'
       );
       return nodes && nodes.length > 0;
-    }
+    };
 
-    function hasValidationErrors(formId) {
+    var hasValidationErrors = function (formId) {
       var err = document.querySelector('.gform_validation_errors, .validation_error');
       return !!err;
-    }
+    };
 
-    function checkNonAjaxConfirmation() {
+    var checkNonAjaxConfirmation = function () {
       if (!isConfirmationDomPresent()) return;
       var wrap = document.querySelector('[id^="gform_confirmation_wrapper_"]');
       var formId = '';
       if (wrap && wrap.id) {
         var m = wrap.id.match(/(\d+)$/);
-        formId = m ? m[1] : '';
+        if (m) formId = m[1];
       }
       if (formId && sessionStorage.getItem('gf_pending_' + formId) === '1') {
         if (!hasValidationErrors(formId)) {
@@ -59,13 +60,13 @@
       } else if (!formId) {
         fireOnce('');
       }
-    }
+    };
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', checkNonAjaxConfirmation);
     } else {
       checkNonAjaxConfirmation();
     }
-  } catch (e) { /* no-op */ }
+  } catch (e) {}
 })();
 </script>
