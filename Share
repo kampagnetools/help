@@ -1,0 +1,13 @@
+function() {
+  const key = 'formStartFlag';
+  try {
+    if (sessionStorage.getItem(key) === 'true') return false;
+    sessionStorage.setItem(key, 'true');
+    return true;
+  } catch(e) {
+    // fallback hvis browseren blokerer sessionStorage
+    if (window.formStartFlag) return false;
+    window.formStartFlag = true;
+    return true;
+  }
+}
