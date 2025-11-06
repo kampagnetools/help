@@ -1,7 +1,46 @@
-<script>
-try {
-  if (Cookiebot && Cookiebot.consent && Cookiebot.consent.marketing && window.lintrk) {
-    window.lintrk('track', { conversion_id: 24414193 });
+<style>
+  .msf2{max-width:920px;margin:0 auto;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+  .msf2-card{background:#E6332A;color:#fff;border-radius:18px;padding:28px}
+  .msf2-title{margin:0 0 6px;font-size:clamp(22px,3.2vw,30px);line-height:1.15;font-weight:800}
+  .msf2-sub{margin:0 0 18px;opacity:.95;font-size:clamp(16px,2.2vw,18px);line-height:1.55}
+  .msf2-opt{background:rgba(255,255,255,.08);border-radius:14px;padding:16px 16px;margin-bottom:16px}
+  .msf2-opt strong{display:block;font-size:18px;margin-bottom:6px}
+  .msf2-opt a{color:#fff;text-decoration:underline}
+  .msf2-cta{
+    display:inline-block;margin-top:20px;background:#fff;color:#E6332A;
+    padding:.8rem 1.2rem;border-radius:999px;font-weight:800;text-decoration:none;
+    transition:transform .08s ease, box-shadow .08s ease;
   }
-} catch(e){}
-</script>
+  .msf2-cta:hover,.msf2-cta:focus{
+    outline:2px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,.2);transform:translateY(-1px);
+  }
+  .msf2-proof{margin-top:16px;opacity:.9;font-size:14px}
+  @media(min-width:780px){
+    .msf2-card{padding:34px}
+  }
+</style>
+
+<div class="msf2">
+  <div class="msf2-card" role="region" aria-label="Gør firmajulegaven til Lægehjælp">
+    <h3 class="msf2-title">Gør firmajulegaven til livsvigtig LÆGEHJÆLP</h3>
+
+    <p class="msf2-sub">
+      Giv medarbejderne mulighed for at donere deres firmajulegave til et godt formål ved at lægge <strong>LÆGEHJÆLP</strong> på jeres gaveportal.  
+      I får alt materiale, I skal bruge — hurtigt og let.
+    </p>
+
+    <div class="msf2-opt">
+      <strong>Bestil digitalt julekatalog</strong>
+      Skriv blot “julekatalog” til <a href="mailto:jsk@msf.dk">jsk@msf.dk</a> – så sender vi alt materiale med det samme.
+    </div>
+
+    <p>
+      <a class="msf2-cta"
+         href="mailto:jsk@msf.dk?subject=Julekatalog%20%E2%80%93%20L%C3%A6gehj%C3%A6lp&body=Hej%20MSF%2C%20vi%20vil%20gerne%20modtage%20det%20digitale%20julekatalog.%0A%0AVirksomhed%3A%20%0AAntal%20medarbejdere%3A%20">
+        Få det digitale katalog
+      </a>
+    </p>
+
+    <p class="msf2-proof">Let at implementere — stærk effekt for både medarbejdere og nødhjælpsindsatsen.</p>
+  </div>
+</div>
